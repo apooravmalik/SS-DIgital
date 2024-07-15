@@ -19,8 +19,8 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
-app.use('/', (req, res) =>{
-  res.send('Server running');
+app.get("/", (req, res) =>{
+  return res.json({ message: "Server is running" });
 })
 
 app.use(cors(corsOptions));
