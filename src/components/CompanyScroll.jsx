@@ -7,21 +7,15 @@ import Way2Pay from "../assets/Way_2_Pay_logo.png";
 
 const CompanyScroll = () => (
   <Fade triggerOnce>
-    <div className="py-10">
-      <div className="flex overflow-hidden space-x-16 group [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
-        <div className="flex space-x-16 animate-loop-scroll group-hover:paused">
-          <img src={Npay} alt="Company 1" className="h-12" />
-          <img src={QuickNPay} alt="Company 2" className="h-12" />
-          <img src={SoulPay} alt="Company 2" className="h-12" />
-          <img src={Way2Pay} alt="Company 2" className="h-12" />
-          <img src={SmartBazaar} alt="Company 2" className="h-12" />
-        </div>
-        <div className="flex space-x-16 animate-loop-scroll group-hover:paused">
-          <img src={Npay} alt="Company 1" className="h-12" />
-          <img src={QuickNPay} alt="Company 2" className="h-12" />
-          <img src={SoulPay} alt="Company 2" className="h-12" />
-          <img src={Way2Pay} alt="Company 2" className="h-12" />
-          <img src={SmartBazaar} alt="Company 2" className="h-12" />
+    <div className="py-5 sm:py-10">
+      <div className="overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_10%,_black_90%,transparent_100%)]">
+        <div className="flex space-x-4 sm:space-x-8 animate-loop-scroll group-hover:paused">
+          {[Npay, QuickNPay, SoulPay, Way2Pay, SmartBazaar].map((logo, index) => (
+            <img key={index} src={logo} alt={`Company ${index + 1}`} className="h-8 sm:h-12 object-contain" />
+          ))}
+          {[Npay, QuickNPay, SoulPay, Way2Pay, SmartBazaar].map((logo, index) => (
+            <img key={index + 5} src={logo} alt={`Company ${index + 1}`} className="h-8 sm:h-12 object-contain" />
+          ))}
         </div>
       </div>
     </div>
