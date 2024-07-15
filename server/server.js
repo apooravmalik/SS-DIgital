@@ -19,6 +19,10 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+app.use('/', (req, res) =>{
+  res.send('Server running');
+})
+
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
