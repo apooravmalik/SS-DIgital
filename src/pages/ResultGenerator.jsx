@@ -12,7 +12,7 @@ const ImageWithFallback = React.memo(function ImageWithFallback({ src, alt, clas
 
   const onLoad = useCallback(() => setLoading(false), []);
   const onError = useCallback(() => {
-    setImgSrc("/path/to/fallback/image.png"); // Update this path
+    setImgSrc("/fallback/image.png"); // Update this path
     setLoading(false);
   }, []);
 

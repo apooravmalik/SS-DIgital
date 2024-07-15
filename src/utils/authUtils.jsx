@@ -19,27 +19,42 @@ export const fetchWithToken = async (url, options = {}) => {
   let token = getAuthToken();
   const tokenExpiry = localStorage.getItem("tokenExpiry");
 
-  if (Date.now() >= tokenExpiry) {
-    // Token expired, refresh it
+  if (Date.now() >= tokenExpiry && !isRefreshing) {
+    isRefreshing = true;
     try {
-      const refreshResponse = await axios.post("/api/auth/refresh-token", {
-        token,
-      });
-
+      const refreshResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/refresh-token`, { token });
       if (refreshResponse.status === 200) {
         const { token: newToken, expires_in } = refreshResponse.data;
         token = newToken;
         const newTokenExpiry = Date.now() + expires_in * 1000;
         setAuthToken(newToken);
         localStorage.setItem("tokenExpiry", newTokenExpiry);
+        processQueue(null, newToken);
       } else {
-        throw new Error("Token refresh failed");
+        processQueue(new Error('Failed to refresh token'));
       }
     } catch (error) {
-      console.error("Token refresh error:", error);
+      processQueue(error, null);
       removeAuthToken();
-      throw new Error("Authentication failed. Please log in again.");
+      window.location.href = '/login'; // Redirect to login page
+      throw error;
+    } finally {
+      isRefreshing = false;
     }
+  }
+
+  if (isRefreshing) {
+    return new Promise((resolve, reject) => {
+      failedQueue.push({ resolve, reject });
+    }).then(token => {
+      options.headers = {
+        ...options.headers,
+        "Authorization": `Bearer ${token}`,
+      };
+      return axios(url, options);
+    }).catch(error => {
+      throw error;
+    });
   }
 
   options.headers = {
@@ -49,3 +64,19 @@ export const fetchWithToken = async (url, options = {}) => {
 
   return axios(url, options);
 };
+
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
