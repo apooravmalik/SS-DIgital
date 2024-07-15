@@ -14,7 +14,12 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:4173',  // Add this line
+    'https://ss-digital.vercel.app'  // Add your Vercel deployment URL
+  ],
   credentials: true,
   optionsSuccessStatus: 200
 };
